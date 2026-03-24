@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Durumsal Liderlik Modeli Envanteri</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #F7F5F0;
+    --card: #FFFFFF;
+    --ink: #1A1A1A;
+    --ink-light: #6B6560;
+    --accent: #2D5A3D;
+    --accent-light: #E8F0EB;
+    --accent-hover: #3A7350;
+    --border: #E0DBD3;
+    --error: #C0392B;
+    --error-bg: #FDEDEB;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --radius: 12px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: var(--accent);
+    color: white;
+    padding: 48px 24px 56px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 50%;
+  }
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .header p {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: -24px auto 60px;
+    padding: 0 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .intro-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--accent);
+  }
+  .intro-card p {
+    font-size: 0.92rem;
+    color: var(--ink-light);
+  }
+  .intro-card strong {
+    color: var(--ink);
+  }
+
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-bottom: 16px;
+    transition: box-shadow 0.3s;
+    border: 1px solid transparent;
+  }
+  .question-card:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .question-card.has-error {
+    border-color: var(--error);
+  }
+
+  .q-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--accent);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 20px;
+    line-height: 1.65;
+  }
+
+  .option-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border-radius: 8px;
+    transition: background 0.2s;
+  }
+  .option-row:hover {
+    background: var(--accent-light);
+  }
+
+  .option-letter {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .option-text {
+    flex: 1;
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    line-height: 1.55;
+  }
+
+  .option-input {
+    flex-shrink: 0;
+    width: 56px;
+    margin-top: 1px;
+  }
+  .option-input input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    color: var(--ink);
+    background: white;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+  .option-input input::-webkit-outer-spin-button,
+  .option-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .option-input input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(45,90,61,0.12);
+  }
+
+  .sum-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .sum-row .sum-val {
+    color: var(--accent);
+    font-size: 1rem;
+  }
+  .sum-row .sum-val.invalid {
+    color: var(--error);
+  }
+
+  .error-msg {
+    background: var(--error-bg);
+    color: var(--error);
+    font-size: 0.82rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 8px;
+  }
+
+  .progress-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: 4px;
+    background: var(--border);
+  }
+  .progress-bar .fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .submit-area {
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 48px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(45,90,61,0.25);
+  }
+  .btn-submit:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(45,90,61,0.3);
+  }
+  .btn-submit:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .global-error {
+    background: var(--error-bg);
+    color: var(--error);
+    padding: 14px 20px;
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* RESULTS PAGE */
+  .results-page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 16px 60px;
+  }
+  .results-header {
+    background: var(--accent);
+    color: white;
+    padding: 48px 24px;
+    text-align: center;
+    margin-bottom: -24px;
+  }
+  .results-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+  .results-header p {
+    opacity: 0.8;
+    font-size: 0.9rem;
+  }
+
+  .score-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 24px;
+    position: relative;
+    z-index: 2;
+  }
+  @media (max-width: 480px) {
+    .score-grid { grid-template-columns: 1fr; }
+  }
+
+  .score-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s;
+  }
+  .score-card:hover {
+    transform: translateY(-4px);
+  }
+  .score-card.dominant {
+    border: 2px solid var(--accent);
+  }
+  .score-card.dominant::after {
+    content: '★ Baskın Stil';
+    position: absolute;
+    top: 10px;
+    right: -28px;
+    background: var(--accent);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 36px;
+    transform: rotate(45deg);
+  }
+  .score-card .score-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.8rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .score-card .score-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .score-card .score-sub {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+  }
+
+  .bar-section {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-top: 20px;
+  }
+  .bar-section h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+  .bar-item {
+    margin-bottom: 16px;
+  }
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .bar-track {
+    height: 14px;
+    background: var(--bg);
+    border-radius: 7px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 7px;
+    transition: width 1s ease;
+  }
+  .bar-fill.s1 { background: #2D5A3D; }
+  .bar-fill.s2 { background: #4A8C6A; }
+  .bar-fill.s3 { background: #7BB59A; }
+  .bar-fill.s4 { background: #A8D4BE; }
+
+  .desc-section {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px;
+    margin-top: 20px;
+  }
+  .desc-section h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.15rem;
+    margin-bottom: 16px;
+  }
+  .desc-block {
+    padding: 16px;
+    background: var(--bg);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--accent);
+  }
+  .desc-block h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--accent);
+  }
+  .desc-block p {
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    line-height: 1.6;
+  }
+
+  .btn-restart {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 40px;
+    background: white;
+    color: var(--accent);
+    border: 2px solid var(--accent);
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 28px;
+  }
+  .btn-restart:hover {
+    background: var(--accent);
+    color: white;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-in {
+    animation: fadeUp 0.5s ease forwards;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useCallback, useMemo, useEffect, useRef } = React;
+
+const QUESTIONS = [
+  {
+    id: 1,
+    text: "Ekibinizdeki insanlar son zamanlarda yapmaya çalıştığınız \"dostça konuşmalarla\" pek ilgilenmiyorlar, kendi durumları ile ilgililer. Performansları hızla düşmekte…",
+    options: {
+      a: "Verilen görevlerin yapılmasının gerekliliğini vurgularım",
+      b: "Benimle tartışabilecekleri bir ortam hazırlarım fakat fazlaca bir katılım göstermem",
+      c: "Ekip üyeleri ile konuşur, hedefleri belirlerim",
+      d: "Bilerek müdahale etmem, kendilerinin çözmesini beklerim"
+    }
+  },
+  {
+    id: 2,
+    text: "Ekibinizdeki insanların gözlenebilen performansları artmaktadır. Tüm çalışanlarınızın sorumlulukların ve kendilerinden beklenen performans kriterlerinin farkında olmaları için çaba göstermektesiniz…",
+    options: {
+      a: "Bir yandan dostluk ilişkisini sürdürmeye gayret ederken, öte yandan da ekibimdeki kişilerin sorumluluklarının ve kendilerinden beklenen performans kriterlerinin farkında olmaları için hatırlatmalara devam ederim",
+      b: "Yaptıklarımın yeterli olduğunu düşünüp kendilerinin harekete geçmelerini beklerim",
+      c: "İnsanların kendilerini önemli hissetmeleri sağlar ve katılımlarını artırmak için motive ederim",
+      d: "Zaman sınırı belirler, yapmaları gerekeni tarifler ve görevlerin önemini vurgularım"
+    }
+  },
+  {
+    id: 3,
+    text: "Ekibinizdeki insanlar, kendi başlarına çözemeyecekleri bir sorunla karşı karşıyalar... Genelde onlara müdahale etmiyorsunuz, grubun performansı ve bireyler arası ilişkiler iyi…",
+    options: {
+      a: "Ekiple beraber çalışır ve sorunun çözümüne birlikte ulaşmak için katkıda bulunurum",
+      b: "Ekibe kendi çözümünü bulana kadar müdahale etmem",
+      c: "Konuya dahil olurum; hemen, hızlı ve nazik biçimde çözmek için harekete geçerim",
+      d: "Sorunu çözmeleri için grubu cesaretlendirir, çabalarını da destekler ve takdir ederim"
+    }
+  },
+  {
+    id: 4,
+    text: "Önemli bir değişim düşünüyorsunuz… Ekibiniz değişim ihtiyacına saygı gösterme ve değişimi gerçekleştirme konularında başarılı…",
+    options: {
+      a: "Değişim sürecinin gelişimine ekibin de katılmasını desteklerim, cesaretlendiririm ama işlere doğrudan müdahale etmem",
+      b: "Değişimi duyurur, görevleri dağıtır, yakın bir gözlem ve denetimle uygularım",
+      c: "Ekibin gidilen yönde kendi aksiyon planlarını oluşturmasını beklerim, kendi inisiyatifleri ile harekete geçmelerine izin veririm",
+      d: "Ekibin de görüşlerini, önerilerini alırım; ancak yine de değişimi ben yönlendiririm"
+    }
+  },
+  {
+    id: 5,
+    text: "Geçtiğimiz birkaç ay süresince ekibinizin performansı düşmeye başladı. Verilen hedefleri gerçekleştirme konusunda pek kaygılı değiller, ayrıca zaman sınırlaması olan işlerin bitirilmesi konusunda sürekli \"ikaz\" etmeniz gerekiyor.",
+    options: {
+      a: "Ekibi, sorumlulukları ve ekip içi rolleri kendilerinin yeniden tanımlayabilmesi için yetkilendiririm",
+      b: "Ekibin görüşlerini alır birleştiririm, hedefleri gerçekleştirip gerçekleştirmeyeceğine bakarım ve kararlarımı veririm",
+      c: "Hızla sorumlulukları ve ekip içi rolleri yeniden tanımlar ve dikkatle uygulatırım",
+      d: "Hedefleri yakalama konusunda ekibe güvendiğimi ifade ederim ve sorumluluklar ile ekip içi rolleri kendilerinin yeniden tanımlayabilmesi için gereğinde desteğimi verme konusunda hazır olduğumu gösteririm"
+    }
+  },
+  {
+    id: 6,
+    text: "Etkin biçimde çalışan bir organizasyona atandınız. Önceki ekip yöneticisi durumu \"sıkıca\" kontrol eden birisi. Aynı üretken ortamı sürdürmek, ancak çalışma iklimini biraz daha insancıl bir düzeye taşımayı istiyorsunuz…",
+    options: {
+      a: "Ekip üyelerinin kendilerini önemli hissedip, kararlara aktif katılımlarını sağlamak için destekler ve ihtiyaç duyduklarında yanlarında olduğumu gösteririm",
+      b: "Yapılacak öncelikli işlerin üzerinden geçer, beklentilerimi söyler, teslim tarihleri belirler ve verilen görevlerin önemini vurgularım",
+      c: "Ekibe güvendiğimi gösterir bir konuşma yapar ve onları işlerinde rahat bırakırım",
+      d: "Ekibin karar alma aşamalarında fikirlerini toplarım, ancak hedeflerin neresinde olduğumuzu da yakından izlerim"
+    }
+  },
+  {
+    id: 7,
+    text: "Ekibiniz için \"yeni\" olarak değerlendirilebilecek organizasyonel bir değişim düşünüyorsunuz. Ekip üyeleri gereken bu değişim hakkında önerilerini ilettiler. Ekip üretken ve çalışmalarında esneklik gösteren bir yapıda…",
+    options: {
+      a: "Değişimin adımlarını tanımlar, görevleri dağıtır, yakın bir gözlemle izler ve yönlendiririm",
+      b: "Ekiple birlikte değişim sürecine katılırım, fakat uygulamayı onların organize etmesine izin veririm",
+      c: "Ekibin önerdiği değişimleri gerçekleştirmeye istekli olurum ancak yine de değişimin uygulanmasını yakından kontrol ederim",
+      d: "Vizyonumu anlatırım, sürece dahil olmam, değişimi ekibin yönlendirmesine izin veririm"
+    }
+  },
+  {
+    id: 8,
+    text: "Ekibinizin performansı ve grup içi ilişkileri iyi, ancak ekibin doğru yöne gittiği hakkında kuşkularınız var…",
+    options: {
+      a: "Ekibime doğru yolu bulmaları konusunda güvenirim ve kararlarında rahat bırakırım",
+      b: "Ekiple birlikte durumu tartışır ve ardından gerekli değişimi tetiklerim",
+      c: "Ekip üyelerini iyice tanımlanmış belirgin aksiyonlarla yönlendirecek adımları atarım",
+      d: "Ekiple birlikte durumu tartışmayı desteklerim, gereğinde tecrübelerimi aktarırım"
+    }
+  },
+  {
+    id: 9,
+    text: "Yöneticiniz sizi, değişimi gerçekleştirmek konusunda önerilerde bulunması gereken, ancak oldukça gecikmiş bir ekibin başına atadı. Ekibin hedefleri net değil. Toplantılarda katılım düşük, toplantı sohbet ortamına dönüşüyor.",
+    options: {
+      a: "Ekibe güvendiğimi ifade eder ve sorunu kendilerinin çözmeleri için yetkilendiririm",
+      b: "Ekibin görüşlerini toplarım, hedefleri gerçekleştirip gerçekleştirmeyeceğine bakarım, eksik kalan yerleri de ben tamamlarım",
+      c: "Hedefleri yeniden tanımlar, kendi önerilerimi iletir ve uygulamaları dikkatle yönlendiririm",
+      d: "Hedeflerin tespiti aşamasında gerekirse destek veririm ancak çok fazla müdahale etmeden kendi kararlarının oluşumuna fırsat tanırım"
+    }
+  },
+  {
+    id: 10,
+    text: "Genellikle sorumluluk alabilen ekibiniz, geçenlerde yeniden belirlediğiniz performans kriterlerine uyum sağlamıyor…",
+    options: {
+      a: "Ekibi, kriterleri yeniden belirlemeleri için katılım göstermeleri yolunda motive ederim ve bu sorunu aşmaları yolunda inanç aşılarım",
+      b: "Kriterleri gözden geçirir ve uyum sağlamaları için gereken aksiyonları dikkatle uygularım",
+      c: "Baskı uygulamam, sorumluluklarını bildikleri bilinciyle karışmadan uzaktan takip ederim",
+      d: "Ekibin önerilerini alır kendiminkilerle birleştiririm; beklentilerime uyup uymadığına bakar ve gerekirse müdahale ederim"
+    }
+  },
+  {
+    id: 11,
+    text: "Yeni bir pozisyona atandınız. Önceki ekip yöneticisi ekip içi ilişkilere hiç karışmamış biri. Ekip kendiliğinden rol dağılımlarını yapmış ve sorumluluk alanlarını belirlemiş durumda. Ekip içi ilişkiler iyi…",
+    options: {
+      a: "Ekip üyelerini kafamdaki iş planını uygulayacak şekilde iyice tanımlanmış belirgin durumlara yönlendirecek adımları atarım",
+      b: "Ekip üyelerinin kararlara olan etkilerini artırır ve etkin katılımı olanları takdir ederim",
+      c: "Geçmişteki performansı grupla değerlendirir, yeni uygulamaların gerekliliğini yoklarım",
+      d: "Ekibi önceden olduğu gibi yetkilendirir, müdahale etmeden yönetmeye devam ederim"
+    }
+  },
+  {
+    id: 12,
+    text: "Ekip gerçekten takdir edilecek bir performans geçmişine sahip. Ekip üyeleri etkin bir biçimde uzun vadeli hedeflere odaklanmış durumdalar. Son zamanlarda ekip üyeleri arasında iç çatışmalar oluştuğu bilgisine sahipsiniz.",
+    options: {
+      a: "Yeni bir uygulamanın gerekliliğini ekip içinde yoklar ve bulduğumuz çözümü uygularım",
+      b: "Ekip üyelerinin kendi çözümlerini geliştirmeleri için yetkilendirir, sorunun aşılmasını onlara bırakırım",
+      c: "Dolaylı veya dolaysız yollardan, hemen hızlı ve nazik biçimde çözmek için davranırım",
+      d: "Çözüm için ekip üyelerine destek verirken, ekiple birlikte sorunu tartışma sürecine katılırım ancak yönlendirici olmam"
+    }
+  }
+];
+
+// Scoring mapping: which column (1-4) each option maps to per question
+// Columns: 1=Yön Gösteren, 2=Yönlendirici Koçluk, 3=Destekleyici Koçluk, 4=Yetkilendiren
+const SCORING = {
+  1:  { a: 1, c: 2, b: 3, d: 4 },
+  2:  { d: 1, a: 2, c: 3, b: 4 },
+  3:  { c: 1, a: 2, d: 3, b: 4 },
+  4:  { b: 1, d: 2, a: 3, c: 4 },
+  5:  { c: 1, b: 2, d: 3, a: 4 },
+  6:  { b: 1, d: 2, a: 3, c: 4 },
+  7:  { a: 1, c: 2, b: 3, d: 4 },
+  8:  { c: 1, b: 2, d: 3, a: 4 },
+  9:  { c: 1, b: 2, d: 3, a: 4 },
+  10: { b: 1, d: 2, a: 3, c: 4 },
+  11: { a: 1, c: 2, b: 3, d: 4 },
+  12: { c: 1, a: 2, d: 3, b: 4 }
+};
+
+const STYLE_INFO = [
+  {
+    key: 1,
+    name: "Yön Gösteren",
+    sub: "Yüksek Görev / Düşük İlişki",
+    color: "#2D5A3D",
+    desc: "Bu stilde lider, çalışanların fikrini almadan kararlar alır, açık ve net direktifler verir ve yakından takip eder. Hevesli yeni başlayan çalışanlar için uygundur."
+  },
+  {
+    key: 2,
+    name: "Yönlendirici Koçluk",
+    sub: "Yüksek Görev / Yüksek İlişki",
+    color: "#4A8C6A",
+    desc: "Bu stilde lider, çalışanların fikirlerini dinler, birlikte yön verir ve karar süreçlerine dahil eder. Şevki kırılmış acemi çalışanlar için uygundur."
+  },
+  {
+    key: 3,
+    name: "Destekleyici Koçluk",
+    sub: "Düşük Görev / Yüksek İlişki",
+    color: "#7BB59A",
+    desc: "Bu stilde lider, akıl vermekten çok destek olur, sorular sorar ve farklı bakış açıları sunar. Becerikli fakat temkinli çalışanlar için uygundur."
+  },
+  {
+    key: 4,
+    name: "Yetkilendiren",
+    sub: "Düşük Görev / Düşük İlişki",
+    color: "#A8D4BE",
+    desc: "Bu stilde lider, çalışanları kendi kararlarını almaları için problemle baş başa bırakır ve uzaktan takip eder. Kendi işini kendi yaparak başaran çalışanlar için uygundur."
+  }
+];
+
+function QuestionCard({ q, answers, onChange, showError }) {
+  const vals = answers || { a: '', b: '', c: '', d: '' };
+  const sum = ['a','b','c','d'].reduce((s, k) => s + (parseInt(vals[k]) || 0), 0);
+  const allEmpty = ['a','b','c','d'].every(k => vals[k] === '' || vals[k] === undefined);
+  const isInvalid = !allEmpty && sum !== 10;
+  const showSum = !allEmpty;
+
+  return (
+    <div className={`question-card ${showError && sum !== 10 ? 'has-error' : ''}`}>
+      <div className="q-number">{q.id}</div>
+      <div className="q-text">{q.text}</div>
+      {['a','b','c','d'].map(letter => (
+        <div className="option-row" key={letter}>
+          <div className="option-letter">{letter.toUpperCase()}</div>
+          <div className="option-text">{q.options[letter]}</div>
+          <div className="option-input">
+            <input
+              type="number"
+              min="0"
+              max="10"
+              placeholder="–"
+              value={vals[letter] ?? ''}
+              onChange={e => onChange(q.id, letter, e.target.value)}
+            />
+          </div>
+        </div>
+      ))}
+      {showSum && (
+        <div className="sum-row">
+          <span>Toplam:</span>
+          <span className={`sum-val ${isInvalid ? 'invalid' : ''}`}>{sum} / 10</span>
+        </div>
+      )}
+      {showError && sum !== 10 && (
+        <div className="error-msg">
+          Bu sorunun toplam puanı 10 olmalıdır. {sum === 0 ? 'Lütfen puanlarınızı girin.' : `Şu an: ${sum}`}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ResultsPage({ scores, onRestart }) {
+  const maxScore = Math.max(...scores.map(s => s.total));
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  return (
+    <div>
+      <div className="results-header">
+        <h1>Sonuçlarınız</h1>
+        <p>Durumsal Liderlik Modeli Envanteri</p>
+      </div>
+      <div className="results-page">
+        <div className="score-grid">
+          {scores.map((s, i) => (
+            <div
+              key={s.key}
+              className={`score-card animate-in ${s.total === maxScore ? 'dominant' : ''}`}
+              style={{ animationDelay: `${i * 0.12}s` }}
+            >
+              <div className="score-num">{s.total}</div>
+              <div className="score-label">{s.name}</div>
+              <div className="score-sub">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="bar-section animate-in" style={{ animationDelay: '0.5s' }}>
+          <h3>Puan Dağılımı</h3>
+          {scores.map((s, i) => {
+            const pct = (s.total / 120) * 100;
+            return (
+              <div className="bar-item" key={s.key}>
+                <div className="bar-label">
+                  <span>{s.name}</span>
+                  <span>{s.total} puan ({Math.round(pct)}%)</span>
+                </div>
+                <div className="bar-track">
+                  <div className={`bar-fill s${s.key}`} style={{ width: `${pct}%` }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="desc-section animate-in" style={{ animationDelay: '0.7s' }}>
+          <h3>Stil Açıklamaları</h3>
+          {scores
+            .sort((a, b) => b.total - a.total)
+            .map(s => (
+              <div className="desc-block" key={s.key}>
+                <h4>{s.name} — {s.total} puan</h4>
+                <p>{s.desc}</p>
+              </div>
+            ))}
+        </div>
+
+        <div style={{ textAlign: 'center' }}>
+          <button className="btn-restart" onClick={onRestart}>
+            ↻ Yeniden Başla
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
+  const [scores, setScores] = useState(null);
+
+  const handleChange = useCallback((qId, letter, value) => {
+    const num = value === '' ? '' : Math.min(10, Math.max(0, parseInt(value) || 0));
+    setAnswers(prev => ({
+      ...prev,
+      [qId]: { ...(prev[qId] || {}), [letter]: value === '' ? '' : num }
+    }));
+  }, []);
+
+  const completedCount = useMemo(() => {
+    return QUESTIONS.filter(q => {
+      const a = answers[q.id];
+      if (!a) return false;
+      const sum = ['a','b','c','d'].reduce((s, k) => s + (parseInt(a[k]) || 0), 0);
+      return sum === 10;
+    }).length;
+  }, [answers]);
+
+  const handleSubmit = () => {
+    // Validate all
+    const allValid = QUESTIONS.every(q => {
+      const a = answers[q.id];
+      if (!a) return false;
+      const sum = ['a','b','c','d'].reduce((s, k) => s + (parseInt(a[k]) || 0), 0);
+      return sum === 10;
+    });
+
+    if (!allValid) {
+      setShowErrors(true);
+      // Scroll to first error
+      const firstBad = QUESTIONS.find(q => {
+        const a = answers[q.id];
+        if (!a) return true;
+        return ['a','b','c','d'].reduce((s, k) => s + (parseInt(a[k]) || 0), 0) !== 10;
+      });
+      if (firstBad) {
+        const el = document.getElementById(`q-${firstBad.id}`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return;
+    }
+
+    // Calculate scores
+    const totals = { 1: 0, 2: 0, 3: 0, 4: 0 };
+    QUESTIONS.forEach(q => {
+      const a = answers[q.id];
+      const map = SCORING[q.id];
+      ['a','b','c','d'].forEach(letter => {
+        const col = map[letter];
+        totals[col] += parseInt(a[letter]) || 0;
+      });
+    });
+
+    setScores(STYLE_INFO.map(s => ({ ...s, total: totals[s.key] })));
+    setSubmitted(true);
+  };
+
+  const handleRestart = () => {
+    setAnswers({});
+    setSubmitted(false);
+    setShowErrors(false);
+    setScores(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (submitted && scores) {
+    return <ResultsPage scores={scores} onRestart={handleRestart} />;
+  }
+
+  const progress = (completedCount / 12) * 100;
+
+  return (
+    <div>
+      <div className="progress-bar">
+        <div className="fill" style={{ width: `${progress}%` }} />
+      </div>
+      <div className="header">
+        <h1>Durumsal Liderlik Modeli Envanteri</h1>
+        <p>Her durum için 10 puanı dört seçeneğe dağıtın</p>
+      </div>
+      <div className="container">
+        <div className="intro-card">
+          <p>
+            Aşağıdaki <strong>12 durumun</strong> her biri karşısındaki olası dört davranış seçeneğini tercihleriniz doğrultusunda puanlayınız. Her bir durum için elinizdeki <strong>10 puanı</strong> dört seçeneğe istediğiniz gibi dağıtabilirsiniz.
+          </p>
+        </div>
+
+        {showErrors && completedCount < 12 && (
+          <div className="global-error">
+            Lütfen tüm soruları cevaplayın. Her sorunun toplam puanı 10 olmalıdır. ({completedCount}/12 tamamlandı)
+          </div>
+        )}
+
+        {QUESTIONS.map(q => (
+          <div id={`q-${q.id}`} key={q.id}>
+            <QuestionCard
+              q={q}
+              answers={answers[q.id]}
+              onChange={handleChange}
+              showError={showErrors}
+            />
+          </div>
+        ))}
+
+        <div className="submit-area">
+          <button className="btn-submit" onClick={handleSubmit}>
+            Sonuçları Gör →
+          </button>
+          <div style={{ marginTop: 12, fontSize: '0.82rem', color: '#6B6560' }}>
+            {completedCount}/12 soru tamamlandı
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+</body>
+</html>
